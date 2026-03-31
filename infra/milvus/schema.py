@@ -31,6 +31,12 @@ def knowledge_chunk_schema(dim: int) -> CollectionSchema:
         FieldSchema(name="dense_vector", dtype=DataType.FLOAT_VECTOR, dim=dim),
         FieldSchema(name="sparse_vector", dtype=DataType.SPARSE_FLOAT_VECTOR),
         FieldSchema(name="created_at", dtype=DataType.INT64),
+        FieldSchema(
+            name="questions",
+            dtype=DataType.VARCHAR,
+            max_length=65535,
+            description="JSON string containing associated questions for the chunk",
+        ),
     ]
 
     functions = [

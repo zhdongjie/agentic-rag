@@ -16,6 +16,7 @@ from core.utils.file_utils import (
 from core.utils.logger_utils import logger
 from core.utils.path_utils import get_abs_path
 from ingestion.indexing import MilvusDocumentComparator
+from ingestion.processors.java_docs_processor import JavaDocProcessor
 from ingestion.splitters import MarkdownSplitter
 
 DEFAULT_IMAGES_OUTPUT_DIR = get_abs_path(os.path.join("data", "docs", "images"))
@@ -26,6 +27,7 @@ class MarkdownProcessor:
             self,
             images_output_dir: str | Path = DEFAULT_IMAGES_OUTPUT_DIR,
             chunk_threshold: int = 1000,
+            biz_type: str | None = None,
     ):
         """
         Initialize the Markdown processor.
@@ -60,6 +62,7 @@ class MarkdownProcessor:
         )
 
         self._ensure_dir(self.images_output_dir)
+        self.biz_type = biz_type
 
     @staticmethod
     def _ensure_dir(path: str | Path):
@@ -97,6 +100,11 @@ class MarkdownProcessor:
         """
         if not markdown_content or not markdown_content.strip():
             return []
+        java_docs = JavaDocProcessor(markdown_content)
+        questions_meta = "[]"
+        if self.biz_type:
+            markdown_content, extra_meta = java_docs.process()
+            questions_meta = extra_meta.get("questions", "[]")
 
         normalized_source_path = MilvusDocumentComparator.normalize_source_path(original_file_path)
         base_metadata = {
@@ -104,6 +112,7 @@ class MarkdownProcessor:
             "doc_hash": MilvusDocumentComparator.build_doc_hash(normalized_source_path),
             "source": normalized_source_path,
             "created_at": int(time.time()),
+            "questions": questions_meta
         }
 
         markdown_docs = self.splitter.md_header_splitter.split_text(markdown_content)

@@ -24,6 +24,7 @@ class IngestPipeline:
             skip_image: bool = False,
             pdf_api_url: str | None = None,
             pdf_token: str | None = None,
+            biz_type: str | None = None,
     ):
         """
         Initialize the ingestion pipeline.
@@ -43,6 +44,7 @@ class IngestPipeline:
             skip_image (bool): Whether to skip image chunks before final insertion.
             pdf_api_url (str | None): PDF parsing API endpoint.
             pdf_token (str | None): PDF parsing API token.
+            biz_type (str | None): Optional business type identifier (e.g., 'java_tutor') used to dynamically load specific document pre-processors to extract custom metadata (like exercises/questions) before text chunking.
         """
         self.chunk_threshold = chunk_threshold
         self.images_output_dir = Path(images_output_dir)
@@ -51,10 +53,12 @@ class IngestPipeline:
         self.skip_image = skip_image
         self.pdf_api_url = pdf_api_url
         self.pdf_token = pdf_token
+        self.biz_type = biz_type
 
         self.markdown_processor = MarkdownProcessor(
             images_output_dir=self.images_output_dir,
             chunk_threshold=self.chunk_threshold,
+            biz_type=self.biz_type,
         )
         self.special_chunk_explainer = SpecialChunkExplainer(window_size=self.window_size)
         self.knowledge_chunk_indexer = KnowledgeChunkIndexer()
@@ -226,6 +230,12 @@ def build_knowledge_base():
         default=DEFAULT_PDF_TOKEN,
         help="PDF parsing API token.",
     )
+    parser.add_argument(
+        "--biz-type",
+        type=str,
+        default=None,
+        help="Business type for specific document processors (e.g., java_tutor).",
+    )
     args = parser.parse_args()
 
     pipeline = IngestPipeline(
@@ -236,6 +246,7 @@ def build_knowledge_base():
         skip_image=args.skip_image,
         pdf_api_url=args.pdf_api_url,
         pdf_token=args.pdf_token,
+        biz_type=args.biz_type,
     )
 
     input_path = Path(args.file_path)

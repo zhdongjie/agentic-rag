@@ -10,3 +10,4 @@ class RagAgentState(MessagesState):
     query_transform_result: dict[str, Any]
     retrieved_docs: list[Document]
     document_relevance_evaluation: dict[str, Any]
+    questions: list[dict[str, str]]
