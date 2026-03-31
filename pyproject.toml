@@ -20,7 +20,7 @@ package-mode = false
 [tool.poetry.dependencies]
 python = "^3.12.3"
 uvicorn = "^0.23.2"
-langserve = "^0.3.3"
+langserve = {extras = ["server"], version = ">=0.0.30"}
 langchain = "^1.2.10"
 pydantic = "^2.12.5"
 fastapi = "^0.135.2"
@@ -31,7 +31,9 @@ pymilvus = "2.6.9"
 langchain-experimental = "^0.4.1"
 dashscope = "^1.25.14"
 beautifulsoup4 = "^4.14.3"
-sse-starlette = "^3.3.4"
+
+[tool.poetry.group.dev.dependencies]
+langchain-cli = ">=0.0.15"
 
 [build-system]
 requires = ["poetry-core"]
