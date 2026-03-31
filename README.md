@@ -142,7 +142,7 @@ https://dashscope.aliyun.com
 
 ```yaml
 # config.yaml
-dashscope_api_key: "your_api_key_here"
+api-key: "your_api_key_here"
 ```
 
 ### ⚠️ 建议
