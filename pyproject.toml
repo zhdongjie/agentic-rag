@@ -1,0 +1,38 @@
+[project]
+name = "Agentic-RAG"
+version = "0.0.1"
+description = "Agentic RAG system"
+authors = [
+    { name = "Joel", email = "joel.shi.cnc@gmail.com" }
+]
+readme = "README.md"
+packages = [
+    { include = "app" },
+    { include = "core" },
+    { include = "infra" },
+    { include = "ingestion" },
+    { include = "models" },
+]
+
+[tool.poetry]
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.12.3"
+uvicorn = "^0.23.2"
+langserve = "^0.3.3"
+langchain = "^1.2.10"
+pydantic = "^2.12.5"
+fastapi = "^0.135.2"
+langchain-community = "^0.4.1"
+langchain-milvus = "^0.3.3"
+langchain-openai = "^1.1.11"
+pymilvus = "2.6.9"
+langchain-experimental = "^0.4.1"
+dashscope = "^1.25.14"
+beautifulsoup4 = "^4.14.3"
+sse-starlette = "^3.3.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
